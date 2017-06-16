@@ -1,6 +1,6 @@
 {
   "name": "graph-core",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A powerful and flexible graph structure for JS",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/oakfang/graph-core#readme",
   "dependencies": {
-    "itercol": "^2.0.0"
+    "itercol": "^2.1.0"
   },
   "devDependencies": {
     "ava": "^0.19.1",
