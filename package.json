@@ -4,7 +4,7 @@
   "description": "A powerful and flexible graph structure for JS",
   "main": "index.js",
   "scripts": {
-    "test": "nyc ava -v"
+    "test": "nyc node test"
   },
   "repository": {
     "type": "git",
@@ -25,7 +25,7 @@
     "itercol": "^2.1.0"
   },
   "devDependencies": {
-    "ava": "^0.19.1",
-    "nyc": "^11.0.2"
+    "nefarious": "^2.0.1",
+    "nyc": "^11.1.0"
   }
 }
