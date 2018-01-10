@@ -26,6 +26,37 @@ class Graph {
     this._verticesTypes = {};
   }
 
+  static fromObject(vertices) {
+    const g = new Graph();
+    const edges = vertices.reduce((allEdges, { id, type, vertex, edges }) => {
+      g.setVertex(id, type, vertex);
+      return allEdges.concat(edges);
+    }, []);
+    while (edges.length) {
+      const { origin, target, type, properties } = edges.pop();
+      g.setEdge(origin, target, type, properties);
+    }
+    return g;
+  }
+
+  toObject() {
+    return Array.from(
+      this.vertices().map(v => ({
+        id: v[Graph.ID],
+        type: v[Graph.TYPE],
+        vertex: v,
+        edges: Array.from(
+          this.outEdges(v[Graph.ID]).map(({ target, type, properties }) => ({
+            origin: v[Graph.ID],
+            target: target[Graph.ID],
+            type,
+            properties
+          }))
+        )
+      }))
+    );
+  }
+
   setVertex(id, type, props) {
     this._vertices.set(
       id,

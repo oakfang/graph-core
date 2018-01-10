@@ -86,3 +86,10 @@ test("vertices", t => {
   const vst = g.vertices("Person").filter(({ name }) => name.includes("a"));
   t.is(Array.from(vst).length, 1);
 });
+
+test("to & from object", t => {
+  const { g } = t.context;
+  const bare = JSON.parse(JSON.stringify(g.toObject()));
+  const g2 = Graph.fromObject(bare);
+  t.truthy(g.edge("foo", "home", "visited").properties.at < Date.now());
+});
