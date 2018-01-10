@@ -6,10 +6,12 @@ test.beforeEach(t => {
   g.setVertex("foo", "Person", { name: "foo" });
   g.setVertex("bar", "Person", { name: "bar" });
   g.setVertex("cat", "Animal", { name: "cat" });
+  g.setVertex("home", "Place", { name: "Home" });
   g.setEdge("foo", "bar", "friend");
   g.setEdge("bar", "foo", "friend");
   g.setEdge("bar", "cat", "owns-a");
   g.setEdge("bar", "cat", "likes-a");
+  g.setEdge("foo", "home", "visited", { at: Date.now() });
   t.context.g = g;
 });
 
@@ -32,7 +34,7 @@ test("set vertex", t => {
   g.setVertex("foo", "Person", { name: "foo1" });
   t.is(g.vertex("foo").name, "foo1");
   g.setVertex("lolz", "Person");
-  t.is(g.vertex("lolz").type, "Person");
+  t.is(g.vertex("lolz")[Graph.TYPE], "Person");
 });
 
 test("has edge", t => {
@@ -45,10 +47,11 @@ test("has edge", t => {
 test("get edge", t => {
   const { g } = t.context;
   const { origin, target, type } = g.edge("foo", "bar", "friend");
-  t.is(origin, "foo");
-  t.is(target, "bar");
+  t.is(origin.name, "foo");
+  t.is(target.name, "bar");
   t.is(type, "friend");
   t.is(g.edge("foo", "cat", "lolz"), null);
+  t.truthy(g.edge("foo", "home", "visited").properties.at < Date.now());
 });
 
 test("remove vertex", t => {
