@@ -66,12 +66,11 @@ g.removeEdge('foo', 'bar', 'friendOf');
 ### Graph::inEdges(target), Graph::outEdges(origin), Graph::interEdges(origin, target), Graph::allEdges(vertexId)
 Get all edges to `target`, all edges from `origin`, all edges from `origin` to `target`, all edges involving `vertexId` - respectively.
 
-### Graph::vertices()
+### Graph::vertices(type?)
 An `iterator` over all the graph's vertices.
 
-### Graph::verticesByType(type)
-An iterator over all the vertices of a given `type`.
-
+### Graph::toObject(), Graph.fromObject(bareObject)
+Serialize and de-serialize the graph
 
 ## Usage
 ```js
@@ -83,7 +82,7 @@ const g = new Graph();
 g.setVertex('foo', 'Person', {name: 'Foo Bar', age: 23});
 g.setVertex('bar', 'Person', {name: 'Bar Bar', age: 22});
 g.setEdge('foo', 'bar', 'friendOf');
-g.outEdge('foo')
+g.outEdges('foo')
  .filter(({type}) => type === 'friendsOf')
  .map(({target}) => g.vertex(target).age); // [22]
 ```
