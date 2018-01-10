@@ -34,37 +34,37 @@ Returns all of the discarded edges.
 g.removeVertex('foo');
 ```
 
-### Graph::setEdge(src, dest, type)
-Ensure an edge of type `type` from vertex `src` to vertex `dest`.
+### Graph::setEdge(origin, target, type, properties={})
+Ensure an edge of type `type` from vertex `origin` to vertex `target`.
 
 ```js
 g.setEdge('foo', 'bar', 'friendOf');
 ```
 
-### Graph::edge(src, dest, type)
-Get the `type` edge from `src` to `dest` if exists, `null` otherwise.
+### Graph::edge(origin, target, type)
+Get the `type` edge from `origin` to `target` if exists, `null` otherwise.
 
 ```js
 g.edge('foo', 'bar', 'friendOf').type === 'friends';
 g.edge('foo', 'bar', 'father') === null;
 ```
 
-### Graph::hasEdge(src, dest, type)
-Check if a `type` edge from `src` to `dest` exists.
+### Graph::hasEdge(origin, target, type)
+Check if a `type` edge from `origin` to `target` exists.
 
 ```js
 g.hasEdge('foo', 'bar', 'friendOf') === true;
 ```
 
-### Graph::removeEdge(src, dest, type)
-Remove a `type` edge from `src` to `dest`.
+### Graph::removeEdge(origin, target, type)
+Remove a `type` edge from `origin` to `target`.
 
 ```js
 g.removeEdge('foo', 'bar', 'friendOf');
 ```
 
-### Graph::inEdges(dest), Graph::outEdges(src), Graph::interEdges(src, dest), Graph::allEdges(vertexId)
-Get all edges to `dest`, all edges from `src`, all edges from `src` to `dest`, all edges involving `vertexId` - respectively.
+### Graph::inEdges(target), Graph::outEdges(origin), Graph::interEdges(origin, target), Graph::allEdges(vertexId)
+Get all edges to `target`, all edges from `origin`, all edges from `origin` to `target`, all edges involving `vertexId` - respectively.
 
 ### Graph::vertices()
 An `iterator` over all the graph's vertices.
@@ -85,5 +85,5 @@ g.setVertex('bar', 'Person', {name: 'Bar Bar', age: 22});
 g.setEdge('foo', 'bar', 'friendOf');
 g.outEdge('foo')
  .filter(({type}) => type === 'friendsOf')
- .map(({dest}) => g.vertex(dest).age); // [22]
+ .map(({target}) => g.vertex(target).age); // [22]
 ```
