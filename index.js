@@ -1,22 +1,4 @@
-const iter = require("itercol");
-
-function* getEdges(source, edges, isOrigin) {
-  for (const [other, types] of edges.entries()) {
-    for (const type of Object.keys(types)) {
-      yield {
-        origin: isOrigin ? source : other,
-        target: isOrigin ? other : source,
-        type,
-        properties: types[type]
-      };
-    }
-  }
-}
-
-function* getAllEdges(graph, id) {
-  yield* graph.outEdges(id);
-  yield* graph.inEdges(id);
-}
+const iter = require('itercol');
 
 class Graph {
   constructor() {
@@ -50,9 +32,9 @@ class Graph {
             origin: v[Graph.ID],
             target: target[Graph.ID],
             type,
-            properties
+            properties,
           }))
-        )
+        ),
       }))
     );
   }
@@ -74,23 +56,25 @@ class Graph {
     return this._vertices.has(id);
   }
 
-  removeVertex(id) {
-    const v = this.vertex(id);
-    if (!v) return false;
-    const { [Graph.TYPE]: type } = v;
+  _removeVertexFromTypeIndex(v) {
+    const { [Graph.TYPE]: type, [Graph.ID]: id } = v;
     this._verticesTypes[type].delete(id);
-    const toEdges = this._from.get(v);
-    if (toEdges) {
-      for (const target of toEdges) {
-        this._to.delete(v);
-      }
-    }
-    const fromEdges = this._to.get(v);
-    if (fromEdges) {
-      for (const origin of fromEdges) {
+  }
+
+  _removeAllEdgesToVertex(v) {
+    const verticesWithEdgesToV = this._to.get(v);
+    if (verticesWithEdgesToV) {
+      for (let origin of verticesWithEdgesToV) {
         this._from.get(origin).delete(v);
       }
     }
+  }
+
+  removeVertex(id) {
+    const v = this.vertex(id);
+    if (!v) return false;
+    this._removeVertexFromTypeIndex(v);
+    this._removeAllEdgesToVertex(v);
     this._vertices.delete(id);
     return true;
   }
@@ -110,8 +94,8 @@ class Graph {
       this._to.set(vTarget, new Set());
     }
     this._to.get(vTarget).add(vOrigin);
-    const toEdges = fromEdges.get(vTarget);
-    toEdges[type] = properties;
+    const edgesFromOriginToTarget = fromEdges.get(vTarget);
+    edgesFromOriginToTarget[type] = properties;
     return { origin: vOrigin, target: vTarget, type, properties };
   }
 
@@ -148,12 +132,12 @@ class Graph {
 
   *_outEdges(origin) {
     for (const [target, types] of this._from.get(origin).entries()) {
-      for (const type of Object.keys(types)) {
+      for (let type of Object.keys(types)) {
         yield {
           origin,
           target,
           type,
-          properties: types[type]
+          properties: types[type],
         };
       }
     }
@@ -167,14 +151,14 @@ class Graph {
   }
 
   *_inEdges(target) {
-    for (const origin of this._to.get(target)) {
+    for (let origin of this._to.get(target)) {
       const types = this._from.get(origin).get(target);
-      for (const type of Object.keys(types)) {
+      for (let type of Object.keys(types)) {
         yield {
           origin,
           target,
           type,
-          properties: types[type]
+          properties: types[type],
         };
       }
     }
@@ -209,7 +193,7 @@ class Graph {
   }
 }
 
-Graph.ID = Symbol("graphId");
-Graph.TYPE = Symbol("graphType");
+Graph.ID = Symbol('graphId');
+Graph.TYPE = Symbol('graphType');
 
 module.exports = Graph;
