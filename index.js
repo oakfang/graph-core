@@ -40,10 +40,14 @@ class Graph {
   }
 
   setVertex(id, type, props) {
-    this._vertices.set(
+    const vertex = Object.freeze({
+      [Graph.TYPE]: type,
+      [Graph.ID]: id,
       id,
-      Object.assign({ [Graph.TYPE]: type, [Graph.ID]: id }, props || {})
-    );
+      type,
+      ...props,
+    });
+    this._vertices.set(id, vertex);
     if (!this._verticesTypes[type]) this._verticesTypes[type] = new Set();
     this._verticesTypes[type].add(id);
   }
@@ -95,6 +99,7 @@ class Graph {
     }
     this._to.get(vTarget).add(vOrigin);
     const edgesFromOriginToTarget = fromEdges.get(vTarget);
+    properties = Object.freeze(properties);
     edgesFromOriginToTarget[type] = properties;
     return { origin: vOrigin, target: vTarget, type, properties };
   }
