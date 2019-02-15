@@ -1,4 +1,4 @@
-# graph-core
+# @xgraph/core
 ### A core graph data structure: multiedged, directed and cyclic
 
 ## API
@@ -74,9 +74,7 @@ Serialize and de-serialize the graph
 
 ## Usage
 ```js
-'use strict';
-
-const Graph = require('graph-core');
+const Graph = require('@xgraph/core');
 const g = new Graph();
 
 g.setVertex('foo', 'Person', {name: 'Foo Bar', age: 23});
