@@ -123,5 +123,10 @@ test('to & from object', t => {
   const { g } = t.context;
   const bare = JSON.parse(JSON.stringify(g.toObject()));
   const g2 = Graph.fromObject(bare);
-  t.truthy(g.edge('foo', 'home', 'visited').properties.at < Date.now());
+  t.truthy(g2.edge('foo', 'home', 'visited').properties.at < Date.now());
+});
+
+test('non type find by type', t => {
+  const { g } = t.context;
+  t.is(Array.from(g.vertices('meow')).length, 0);
 });

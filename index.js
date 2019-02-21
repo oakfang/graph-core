@@ -191,7 +191,7 @@ class Graph {
 
   vertices(type) {
     if (type) {
-      return iter(this._verticesTypes[type]).map(id => this.vertex(id));
+      return iter(this._verticesTypes[type] || []).map(id => this.vertex(id));
     }
 
     return iter(this._vertices.values());
