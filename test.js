@@ -1,5 +1,5 @@
 const test = require('nefarious');
-const Graph = require('.');
+const Graph = require('./lib');
 
 test.beforeEach(t => {
   const g = new Graph();
@@ -129,4 +129,12 @@ test('to & from object', t => {
 test('non type find by type', t => {
   const { g } = t.context;
   t.is(Array.from(g.vertices('meow')).length, 0);
+});
+
+test('Use custom index', t => {
+  const { g } = t.context;
+  g.addIndex('name');
+  t.is(Array.from(g.vertices({ name: name => name.length === 3 })).length, 3);
+  const [foo] = g.vertices({ name: 'foo' });
+  t.is(foo.name, 'foo');
 });
