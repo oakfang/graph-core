@@ -3,8 +3,8 @@ const Graph = require('./lib');
 
 test.beforeEach(t => {
   const g = new Graph();
-  g.setVertex('foo', 'Person', { name: 'foo' });
-  g.setVertex('bar', 'Person', { name: 'bar' });
+  g.setVertex('foo', 'Person', { name: 'foo', age: 23 });
+  g.setVertex('bar', 'Person', { name: 'bar', age: 20 });
   g.setVertex('cat', 'Animal', { name: 'cat' });
   g.setVertex('home', 'Place', { name: 'Home' });
   g.setVertex('pt', 'Place', { name: 'Petah Tikva' });
@@ -121,6 +121,7 @@ test('vertices', t => {
 
 test('to & from object', t => {
   const { g } = t.context;
+  g.addIndex('name');
   const bare = JSON.parse(JSON.stringify(g.toObject()));
   const g2 = Graph.fromObject(bare);
   t.truthy(g2.edge('foo', 'home', 'visited').properties.at < Date.now());
@@ -134,7 +135,22 @@ test('non type find by type', t => {
 test('Use custom index', t => {
   const { g } = t.context;
   g.addIndex('name');
+  t.truthy(g.hasIndex('name'));
   t.is(Array.from(g.vertices({ name: name => name.length === 3 })).length, 3);
   const [foo] = g.vertices({ name: 'foo' });
   t.is(foo.name, 'foo');
+  g.dropIndex('name');
+  t.falsy(g.hasIndex('name'));
+  t.is(Array.from(g.vertices({ name: 'foo' })).length, 0);
+  g.addIndex('name');
+  g.addIndex('age', 'Person');
+  t.is(
+    Array.from(
+      g.vertices({
+        name: name => name.length === 3,
+        age: age => age && age >= 20,
+      })
+    ).length,
+    2
+  );
 });
