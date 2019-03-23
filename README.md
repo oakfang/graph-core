@@ -78,9 +78,25 @@ g.removeEdge('foo', 'bar', 'friendOf');
 
 Get all edges to `target`, all edges from `origin`, all edges from `origin` to `target`, all edges involving `vertexId` - respectively.
 
-### Graph::vertices(type:string?)
+### Graph::vertices()
 
 An `iterator` over all the graph's vertices.
+
+### Graph::vertices(type:string)
+
+An `iterator` over all the graph's vertices of a given `type`.
+
+### Graph::vertices(type:string, searchObject:object)
+
+An `iterator` over all the graph's vertices of a given `type`, filtering using [monjo](https://github.com/oakfang/monjo) syntax, using Indices where possible.
+
+### Graph::vertices(searchObject:object)
+
+An `iterator` over all the graph's vertices, filtering using [monjo](https://github.com/oakfang/monjo) syntax, using Indices where possible.
+
+*Note:* Using the unIndexed monjo version for all vertices will, inevitaly, be slower than simply using `graph.vertices().filter(...)` instead.
+
+*Note:* Using the `type` parameter is syntactic sugar for querying the `Graph.TYPE` auto Index, which means that using it with an Index (and especially a Typed Index) will incur an Index Intersection performance penalty.
 
 ### Graph::toObject(), Graph.fromObject(bareObject)
 
@@ -117,27 +133,17 @@ Drop any existing Index for property `prop`;
 
 Return whether or not an Index for property `prop` exists.
 
-### Graph::vertices(searchObject)
-
-When using Indices, you may pass the `vertices` method an object of type:
-
-```ts
-type IndexValuePredicate = (value: Primitive) => boolean;
-type IndexValue = Primitive | IndexValuePredicate;
-type SearchObject = {
-  [indexedProperty: string]: IndexValue;
-};
-```
-
-The returned values are assured to satisfy all searched Indices.
-
 ### Benchmarks
 
 ```
 Benchmarks for 1000000 vertices:
-Setup [no initial Index]: 1781.846ms
-Setup [with initial index]: 2566.437ms
-Querying over all vertices, 50 times [no index]: 1286.428ms
-Creating an index for all vertices: 398.959ms
-Querying over all vertices, 50 times [with index]: 1.275ms
+Setup [no initial Index]: 2237.697ms
+Setup [with initial index]: 3374.034ms
+Querying over all vertices, 50 times [no index, no type annotation, monjo syntax]: 7344.953ms
+Querying over all vertices, 50 times [no index, with type annotation, monjo syntax]: 29761.764ms
+Querying over all vertices, 50 times [no index, no type annotation, classic filter]: 1428.090ms
+Querying over all vertices, 50 times [no index, with type annotation, classic filter]: 19563.437ms
+Creating an index for all vertices: 439.150ms
+Querying over all vertices, 50 times [with index, no type annotation]: 0.431ms
+Querying over all vertices, 50 times [with index, with type annotation]: 0.738ms
 ```

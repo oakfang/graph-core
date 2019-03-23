@@ -141,7 +141,6 @@ test('Use custom index', t => {
   t.is(foo.name, 'foo');
   g.dropIndex('name');
   t.falsy(g.hasIndex('name'));
-  t.is(Array.from(g.vertices({ name: 'foo' })).length, 0);
   g.addIndex('name');
   g.addIndex('age', 'Person');
   t.is(
@@ -152,5 +151,37 @@ test('Use custom index', t => {
       })
     ).length,
     2
+  );
+});
+
+test('Complex filters', t => {
+  const { g } = t.context;
+  g.addIndex('age');
+  const results = Array.from(
+    g.vertices('Person', {
+      name: {
+        $all: 'a',
+      },
+      age: {
+        $gte: 20,
+      },
+    })
+  );
+  const [bar] = results;
+  t.is(results.length, 1);
+  t.is(bar.name, 'bar');
+  g.dropIndex('age');
+  t.is(
+    Array.from(
+      g.vertices({
+        name: {
+          $all: 'a',
+        },
+        age: {
+          $gte: 20,
+        },
+      })
+    ).length,
+    1
   );
 });

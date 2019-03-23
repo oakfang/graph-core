@@ -1,6 +1,6 @@
 {
   "name": "@xgraph/core",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "A powerful and flexible graph structure for JS",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,8 @@
   },
   "homepage": "https://github.com/oakfang/graph-core#readme",
   "dependencies": {
-    "itercol": "^2.1.0"
+    "itercol": "^2.1.0",
+    "monjo": "^1.2.0"
   },
   "devDependencies": {
     "nefarious": "^3.1.0",
